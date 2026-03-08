@@ -1,0 +1,23 @@
+/* .container {
+    display: flex;
+    width: 50%;
+    background: lightgray;
+    padding: 20px;
+    margin: 0 auto;
+}
+.item {
+    flex: 2;
+    padding: 20px;
+    background: steelblue;
+    color: white;
+    text-align: center;
+    border: 1px solid white;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+} */

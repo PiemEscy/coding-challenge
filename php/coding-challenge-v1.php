@@ -440,6 +440,11 @@ function tips() {
     ksort($merge);
     return $merge;
 
+    abs($value['timestamp'] - $item['timestamp']);
+    abs(6.7); // 6.7
+    abs(-6.7); // 6.7
+    abs(-3); // 3
+    abs(3); // 3
 
 }
 

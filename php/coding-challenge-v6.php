@@ -80,6 +80,43 @@
         ];
     }
 
+    // optimized O(n)
+    function validateTransactions_GPT2($transactions)
+    {
+        $valid_transactions = [];
+        $duplicate_transactions = [];
+
+        // lookup table
+        $transaction_map = [];
+
+        foreach ($transactions as $transaction) {
+
+            $key = $transaction['user_id'] . '-' . $transaction['amount'];
+
+            if (isset($transaction_map[$key])) {
+
+                $time_diff = $transaction['timestamp'] - $transaction_map[$key];
+
+                if ($time_diff <= 60) {
+                    $duplicate_transactions[] = $transaction;
+                    continue;
+                }
+            }
+
+            // valid transaction
+            $valid_transactions[] = $transaction;
+
+            // update latest timestamp
+            $transaction_map[$key] = $transaction['timestamp'];
+        }
+
+        return [
+            'valid_transactions' => $valid_transactions,
+            'duplicate_transactions' => $duplicate_transactions,
+            'total_valid_amount' => array_sum(array_column($valid_transactions, 'amount'))
+        ];
+    }
+
     echo '<pre>';
     print_r(index());
     echo '</pre>';

@@ -1,0 +1,35 @@
+# challenge-1.py
+
+# cd explore_html_css/python
+# python challenge-1.py
+
+# //////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////
+
+# # 1. Get user input for name
+# name = input("Enter your name: ")
+
+# # 2. Get two numbers from the user
+# num1 = float(input("Enter first number: "))
+# num2 = float(input("Enter second number: "))
+
+# # 3. Print greeting
+# print(f"\nHello, {name}!")
+
+# # 4. Perform calculations
+# print(f"{num1} + {num2} = {num1 + num2}")
+# print(f"{num1} - {num2} = {num1 - num2}")
+# print(f"{num1} * {num2} = {num1 * num2}")
+# print(f"{num1} / {num2} = {num1 / num2}")
+
+# //////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////
+# //////////////////////////////////////////////////////////////////////////////
+
+fruits = ["apple", "banana", "cherry"]
+fruits.insert(1, "mango")
+# print(fruits)
+
+tuples = ("apple", "banana", "cherry")
+print(type(fruits))

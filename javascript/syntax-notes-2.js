@@ -333,16 +333,158 @@ function findMissingAndDuplicate_claude(arr) {
 }
 
 
+// Problem 8 (Easy–Medium): Two Sum
+// Given an array of integers arr and a target integer target, write a function twoSum(arr, target) that returns the indices of the two numbers that add up to target.
 
+// Assume exactly one valid pair exists.
+// You may not use the same element twice.
+// The order of the returned indices doesn't matter.
 
-// -------------------
-function sample() {
-    let string = 'abcd';
-    return string[0];
+// Example:
+// Input: arr = [2, 7, 11, 15], target = 9
+// Output: [0, 1]   (arr[0] + arr[1] = 2 + 7 = 9)
+
+// Input: arr = [3, 2, 4], target = 6
+// Output: [1, 2]   (arr[1] + arr[2] = 2 + 4 = 6)
+
+// Input: arr = [3, 3], target = 6
+// Output: [0, 1]
+// Constraints: 2 ≤ arr.length ≤ 10^4
+
+// pass but O(n²)
+function twoSum(arr, target) {
+    for (let i = 0; i < arr.length; i++) {
+        const element = arr[i];
+            for (let j = i + 1; j < arr.length; j++) {
+                const subElement = arr[j];
+                if (element + subElement === target){
+                     return [i, j];
+                }
+            }
+    }
+    return [];
+}
+
+// O(n)
+function twoSum_claude(arr, target) {
+    const seen = {}; // maps: number → index where it was found
+
+    for (let i = 0; i < arr.length; i++) {
+        const element = arr[i];
+        const complement = target - element; // the number we NEED to have already seen
+
+        if (complement in seen) {
+            return [seen[complement], i];
+        }
+
+        seen[element] = i; // remember this number and its index, for future iterations
+    }
+
+    return [];
+}
+
+// Problem 9 (Medium): Find the Duplicate in a Different Way
+// Given a string s, find the first non-repeating character in it and return its index. If none exists, return -1.
+// Example:
+// Input: s = "leetcode"
+// Output: 0   ('l' is the first character that appears exactly once)
+
+// Input: s = "loveleetcode"
+// Output: 2   ('v' is the first char appearing only once — check: l,o,v,e,l,e,e,t,c,o,d,e)
+
+// Input: s = "aabb"
+// Output: -1  (every character repeats)
+// Constraints: 1 ≤ s.length ≤ 10^5, lowercase English letters only
+
+// correct, but given a hint
+function findStringDuplicate(s) {
+
+    const counts = {};
+
+    for (const ch of s){
+        if(ch in counts){
+            counts[ch]++;
+        }else{
+            counts[ch] = 1;
+        }
+    }
+
+    for (let i = 0; i < s.length; i++) {
+        if(counts[s[i]] === 1){
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 
-console.log(findMissingAndDuplicate([3, 1, 3])); // [3, 2]
-console.log(findMissingAndDuplicate([1, 2, 2, 4])); // [2, 3]
-console.log(findMissingAndDuplicate([1])); // [-1, -1]
-console.log(findMissingAndDuplicate([2, 3, 3])); // [-1, -1]
+// Problem 10 (Medium): Majority Element
+// Given an array arr of size n, find the majority element — the value that appears more than n/2 times. You may assume the majority element always exists in the array.
+// Example:
+// Input: arr = [2, 2, 1, 1, 1, 2, 2]
+// Output: 2   (2 appears 4 times, n=7, 4 > 3.5)
+
+// Input: arr = [3, 3, 4]
+// Output: 3   (3 appears 2 times, n=3, 2 > 1.5)
+
+// Input: arr = [1]
+// Output: 1
+// Constraints: 1 ≤ arr.length ≤ 10^5
+
+function findMajorityElement(arr) {
+    let arrLen = arr.length;
+    let countVal = {}
+    let finalCount = -Infinity;
+    let finalValue = -1;
+
+    for (const val of arr){
+        if(val in countVal){
+            countVal[val]++;
+        }else{
+            countVal[val] = 1;
+        }
+    }
+
+    for (let i = 0; i < arrLen; i++) {
+        if(countVal[arr[i]] > finalCount){
+            finalCount = countVal[arr[i]];
+            finalValue = arr[i];
+        }
+    }
+
+    return finalValue;
+}
+
+function findMajorityElement_claude(arr) {
+    let candidate = null;
+    let count = 0;
+
+    // PASS 1: find a CANDIDATE majority element
+    for (const val of arr) {
+        if (count === 0) {
+            candidate = val;   // no current "leader," so this value becomes the new candidate
+            count = 1;
+        } else if (val === candidate) {
+            count++;           // matches current candidate, strengthen it
+        } else {
+            count--;           // doesn't match, weaken it — like it "cancels out" one occurrence
+        }
+    }
+
+    return candidate;
+}
+
+// -------------------
+function sample(s) {
+    return s.replaceAll("e","");
+}
+
+
+console.log(findMajorityElement_claude([2, 2, 1, 1, 1, 2, 2])); // 2
+console.log(findMajorityElement_claude([3, 3, 4])); // 3
+console.log(findMajorityElement_claude([1])); // 1
+console.log(findMajorityElement_claude([5, 5, 5, 5, 1, 2, 3])); // 5
+console.log(findMajorityElement_claude([7, 7])); // 7
+console.log(findMajorityElement_claude([6, 6, 6, 6, 6])); // 6
+console.log(findMajorityElement_claude([4, 4, 4, 5, 5, 5, 4])); // 6

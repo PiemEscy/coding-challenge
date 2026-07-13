@@ -67,13 +67,84 @@ function isValid_claude(s) {
     return stack.length === 0;
 }
 
-console.log(isValid_claude("()[]{}"));  // true
-// console.log(isValid("(]"));      // false
-// console.log(isValid("([)]"));    // false
-// console.log(isValid("{[]}"));    // true
-// console.log(isValid(""));        // true
-// console.log(isValid("())"));     // false
-// console.log(isValid("))(("));    // false
+// Problem 11 (Easy–Medium): Palindrome Check with Twist
+// Given a string s containing only lowercase letters, determine if it can be rearranged to form a palindrome.
+// Write a function canFormPalindrome(s) that returns true or false — you're not rearranging it yourself, just checking if some rearrangement could be a palindrome.
+// Example:
+// Input: "civic"
+// Output: true   (already a palindrome)
+
+// Input: "ivicc"
+// Output: true   (can be rearranged to "civic")
+
+// Input: "hello"
+// Output: false  (no rearrangement of "hello" can form a palindrome)
+
+// Input: "aabb"
+// Output: true   (can be rearranged to "abba")
+// Constraints: 1 ≤ s.length ≤ 10^5
+
+function canFormPalindrome(s) {
+    let hasMid = s.length % 2 !== 0;
+    let count = {};
+
+    for (const ch of s){
+        count[ch] = (count[ch] || 0) + 1;
+    }
+    
+    let isPal = Object.values(count).filter((x) => x % 2 !== 0).length;
+    
+    if(hasMid){
+        return isPal !== 1 ? false : true;
+    }else{
+        return isPal ? false : true;
+    }
+}
+
+function canFormPalindrome_claude(s) {
+    const count = {};
+
+    for (const ch of s) {
+        count[ch] = (count[ch] || 0) + 1;
+    }
+
+    let oddCount = 0;
+    for (const val of Object.values(count)) {
+        if (val % 2 !== 0) {
+            oddCount++;
+        }
+    }
+
+    // A palindrome allows AT MOST one character with an odd count
+    // (that lone character sits in the middle if the string length is odd)
+    return oddCount <= 1;
+}
+
+// Problem 12 (Medium): Merge Overlapping Intervals
+// Given an array of intervals intervals, where each interval is [start, end], merge all overlapping intervals and return an array of the non-overlapping intervals that cover all the input intervals.
+// Write a function mergeIntervals(intervals).
+// Example:
+// Input: [[1,3], [2,6], [8,10], [15,18]]
+// Output: [[1,6], [8,10], [15,18]]
+// // [1,3] and [2,6] overlap (3 >= 2), merge into [1,6]
+
+// Input: [[1,4], [4,5]]
+// Output: [[1,5]]
+// // [1,4] and [4,5] touch at 4 — considered overlapping, merge into [1,5]
+
+// Input: [[1,4], [2,3]]
+// Output: [[1,4]]
+// // [2,3] is fully contained within [1,4]
+// Constraints: 1 ≤ intervals.length ≤ 10^4, intervals are NOT guaranteed to be sorted by start
+
+function mergeIntervals(intervals) {
+    let string = 'abcd';
+    return string[0];
+}
+
+console.log(mergeIntervals([[1,4], [2,3]])); [[1,5]]
+
+
 
 
 // -------------------
@@ -83,9 +154,3 @@ function sample() {
 }
 
 
-// console.log(isValid('()[]{}')); // t
-// console.log(isValid('(]')); // f
-// console.log(isValid('([)]')); // f
-// console.log(isValid('{[]}')); // t
-// console.log(isValid('())')); // t
-// console.log(isValid('))((')); // t

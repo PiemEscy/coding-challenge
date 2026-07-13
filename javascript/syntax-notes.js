@@ -434,6 +434,98 @@ Map / Filter / Reduce     O(n)
 
 /*
 ==============================================================
+ JavaScript Object
+==============================================================
+
+Declaration
+-----------
+let obj = {};
+let user = {
+  name: "John",
+  age: 25,
+};
+
+Access
+------
+obj.key                   Dot notation
+obj["key"]                Bracket notation
+obj?.key                  Optional chaining
+obj.key = value           Add / Update property
+delete obj.key            Remove property
+
+Properties
+----------
+Object.keys(obj)          Array of keys
+Object.values(obj)        Array of values
+Object.entries(obj)       Array of [key, value]
+Object.fromEntries(arr)   Array of entries → Object
+Object.hasOwn(obj, key)   Check if key exists
+
+Search
+------
+"key" in obj              Check if key exists
+Object.hasOwn(obj, key)   Check own property
+
+Iteration
+---------
+for (const key in obj)            Loop through keys
+Object.keys(obj).forEach(fn)      Loop keys
+Object.values(obj).forEach(fn)    Loop values
+Object.entries(obj).forEach(fn)   Loop key-value pairs
+
+Modification
+------------
+obj.key = value           Add / Update property
+delete obj.key            Remove property
+Object.assign(a, b)       Merge objects
+{ ...obj }                Copy object
+{ ...a, ...b }            Merge objects (spread)
+
+Transformation
+--------------
+Object.keys(obj)
+Object.values(obj)
+Object.entries(obj)
+Object.fromEntries(arr)
+
+Examples
+--------
+obj.name
+obj["name"]
+obj.age = 30
+delete obj.age
+
+Object.keys(obj)
+Object.values(obj)
+Object.entries(obj)
+
+Object.fromEntries([
+  ["name", "John"],
+  ["age", 25]
+])
+
+Object.entries(obj).map(([key, value]) => ...)
+Object.entries(obj).filter(([key, value]) => ...)
+Object.fromEntries(
+  Object.entries(obj).filter(([key, value]) => ...)
+)
+
+Time Complexity
+---------------
+Access property           O(1)
+Add / Update property     O(1)
+Delete property           O(1)
+Check key                 O(1)
+Object.keys()             O(n)
+Object.values()           O(n)
+Object.entries()          O(n)
+Loop                      O(n)
+
+==============================================================
+*/
+
+/*
+==============================================================
  JavaScript Math Syntax
 ==============================================================
 

@@ -194,28 +194,144 @@ function canBeAnagram_clade(str1, str2) {
 // Output: 0
 // Constraints: 1 ≤ arr.length ≤ 10^4, all values distinct
 
-// ongoing
+// gave up
 function searchRotated(arr, target) {
 
     let left = 0;
     let right = arr.length - 1;
-    let mid = Math.floor(arr.length / 2);
+    
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
 
-    while (mid >= left && mid <= right) {
-        if (arr[mid] === target) return arr[mid];
-        console.log(arr[mid]);
-        
-        if (target < arr[mid]) {
-            mid--;
+        if(arr[mid] === target) {
+            return mid;
         }
 
-        if (target > arr[mid]) {
-            mid++;
+        if(arr[left] <= arr[mid]){
+            if (arr[left] <= target && target < arr[mid]) {
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+        }else{
+            if (arr[mid] < target && target <= arr[right]) {
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+
+    }
+
+    return -1;
+}
+
+function searchRotated_claude(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        console.log("mid: "+mid);
+        console.log("left: "+left);
+        console.log("right: "+right);
+        console.log(" ");
+        
+
+        if (arr[mid] === target) {
+            return mid;
+        }
+
+        // Check which half is normally sorted
+        if (arr[left] <= arr[mid]) {
+                        
+            // Left half [left...mid] is sorted
+            if (arr[left] <= target && target < arr[mid]) {
+                // target is within the sorted left half's range
+                right = mid - 1;
+            } else {
+                // target must be in the right half
+                left = mid + 1;
+            }
+        } else {
+            // Right half [mid...right] is sorted instead
+            if (arr[mid] < target && target <= arr[right]) {
+                // target is within the sorted right half's range
+                left = mid + 1;
+            } else {
+                // target must be in the left half
+                right = mid - 1;
+            }
         }
     }
 
     return -1;
 }
+
+// Problem 6 (Easy–Medium): Missing and Duplicate Number
+// You're given an array arr of size n containing numbers from 1 to n, but one number is missing and one number appears twice (taking the missing number's place).
+// Write a function findMissingAndDuplicate(arr) that returns [duplicate, missing].
+// Example:
+// Input: arr = [1, 2, 2, 4]
+// Output: [2, 3]   (2 is duplicated, 3 is missing)
+
+// Input: arr = [3, 1, 3]
+// Output: [3, 2]   (3 is duplicated, 2 is missing)
+
+// Input: arr = [1]
+// Output: [-1, -1]   (edge case: array of size 1 can't have both — no valid duplicate/missing)
+// Constraints: 1 ≤ arr.length ≤ 10^5, values are between 1 and n
+
+function findMissingAndDuplicate(arr) {
+
+    if(arr.length < 2) return [-1, -1];
+    arr.sort((a, b) => a - b);
+    let output = [];
+
+    for (let index = 0; index < arr.length; index++) {
+        const element = arr[index];
+        const nextElement = arr[index + 1];
+        
+        if(index === 0 && element !== 1){
+            output.push(1);
+        }
+        else if (element === nextElement){
+            if(!output.includes(element)){
+                output.unshift(element);
+            }
+        }else if(element !== nextElement + 1 && element !== nextElement && nextElement > 0){
+                output.push(element + 1);
+        }
+    }
+
+    return output;
+}
+
+function findMissingAndDuplicate_claude(arr) {
+    const n = arr.length;
+    if (n < 2) return [-1, -1];
+
+    let sumActual = 0, sumSqActual = 0;
+    let sumExpected = 0, sumSqExpected = 0;
+
+    for (let i = 0; i < n; i++) {
+        sumActual += arr[i];
+        sumSqActual += arr[i] * arr[i];
+        const num = i + 1;
+        sumExpected += num;
+        sumSqExpected += num * num;
+    }
+
+    const diffSum = sumExpected - sumActual;     // missing - duplicate
+    const diffSq = sumSqExpected - sumSqActual;  // missing^2 - duplicate^2
+    const sumMD = diffSq / diffSum;              // (missing-dup)(missing+dup)/(missing-dup) = missing+duplicate
+
+    const missing = (diffSum + sumMD) / 2;
+    const duplicate = (sumMD - diffSum) / 2;
+
+    return [duplicate, missing];
+}
+
 
 
 
@@ -226,6 +342,7 @@ function sample() {
 }
 
 
-console.log(searchRotated([4, 5, 6, 7, 0, 1, 2], 0)); // 4
-// console.log(searchRotated([4, 5, 6, 7, 0, 1, 2], 3)); // -1
-// console.log(searchRotated([1], 1)); // 0
+console.log(findMissingAndDuplicate([3, 1, 3])); // [3, 2]
+console.log(findMissingAndDuplicate([1, 2, 2, 4])); // [2, 3]
+console.log(findMissingAndDuplicate([1])); // [-1, -1]
+console.log(findMissingAndDuplicate([2, 3, 3])); // [-1, -1]

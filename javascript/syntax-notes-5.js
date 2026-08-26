@@ -3,7 +3,7 @@
 
 // You run logistics for a delivery company. You have a local list of scheduled deliveries, each tied to a city. You need to fetch current weather for each unique city (using the free Open-Meteo API, no key required), tag each delivery with a "risk level" based on wind speed/precipitation, and produce a summary report of at-risk deliveries.
 
-// API: https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,wind_speed_10m,precipitation
+// API: https://api.open-meteo.com/v1/forecast?latitude=80&longitude=80&current=temperature_2m,wind_speed_10m,precipitation
 
 // Requirements
 // fetchWeather(lat, lon) — fetches current weather for one coordinate pair, throws on non-ok response.
@@ -17,6 +17,16 @@
 // You must fetch weather for each unique city in parallel using Promise.all, not sequentially in a loop.
 // Handle the case where one city's fetch fails without crashing the whole report (use Promise.allSettled or try/catch per fetch, and mark that city's deliveries as "unknown" risk).
 
+async function fetchWeather(lat, lon) {
+    const endpoint = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,precipitation`;
+    const response = await fetch(endpoint);
+
+    if(!response.ok){
+        throw new Error(`error occured: ${response.status}`)
+    }
+
+    return await response.json();
+}
 
 function deliveries() {
     const deliveryList = `[
@@ -83,5 +93,66 @@ function deliveries() {
 }
 
 function getUniqueCities(deliveryList) {
-    
+
+    const arr = [];
+    for (const item of deliveryList){
+        if (!arr.find((data) => data.city === item.city)){
+            arr.push(item);
+        }
+    }
+    return arr;
+
+    // get unique cities
+    // return new Set([... deliveryList.map(data => data.city)]);
 }
+
+function assignRiskLevel(weatherData) {
+    if(!weatherData){
+        return "unknown";
+    }
+
+    const wind = weatherData?.current?.wind_speed_10m;
+
+    if (wind < 5) {
+        return "low";
+    } else if (wind > 5 && wind < 10) {
+        return "medium";
+    } else {
+        return "high";
+    }
+}
+
+async function enrichDeliveries(deliveryList, weatherByCity) {
+    for (const city of weatherByCity) {
+        const weather = await fetchWeather(city.lat, city.lon);
+        deliveryList.filter((data) => city.city === data.city).map(function (data) {
+            data.weather = weather;
+            data.riskLevel = assignRiskLevel(weather);
+            return data;
+        })
+    }
+    return deliveryList;
+}
+
+function countHighRisk(enrichedList) {
+    return enrichedList.filter(data => data.riskLevel === "high").length;
+}
+
+function calculateExposedValue(enrichedList) {
+    const filtered = enrichedList.filter(data => data.riskLevel === "high");
+    return filtered.reduce((sum, data) => sum + data.packageValue, 0);
+}
+
+async function result() {
+    const deliveriesData = deliveries();
+    const uniqueCitiesData = getUniqueCities(deliveriesData);
+    const enrich = await enrichDeliveries(deliveriesData, uniqueCitiesData);
+    const totalCountHighRisk = countHighRisk(enrich);
+    const totalExposedVaue = calculateExposedValue(enrich);
+    const finalResult = { deliveries: enrich, totalCountHighRisk, totalExposedVaue }
+    // console.log(JSON.stringify(finalResult, null, 2));
+    console.log(finalResult);
+}
+
+result();
+

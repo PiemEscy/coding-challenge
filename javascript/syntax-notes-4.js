@@ -18,7 +18,7 @@ function convertInvoiceAmountToGbp(data) {
     const getInvoices = invoice();
 
     return getInvoices.map(function (item) {
-        const filteredRate = data.filter((rates) => rates.quote === item.currency)[0].rate ?? 1;
+        const filteredRate = data.filter((rates) => rates.quote === item.currency)[0]?.rate ?? 1;
         const amount = parseFloat(item.amount);
         item.rate = filteredRate;
         item.converted = amount * filteredRate;

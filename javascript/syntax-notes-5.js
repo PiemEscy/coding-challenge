@@ -124,7 +124,13 @@ function assignRiskLevel(weatherData) {
 
 async function enrichDeliveries(deliveryList, weatherByCity) {
     for (const city of weatherByCity) {
-        const weather = await fetchWeather(city.lat, city.lon);
+        let weather = null;
+        try {
+            weather = await fetchWeather(city.lat, city.lon);
+        } catch (err) {
+            console.error(`weather fetch failed for ${city.city}: ${err.message}`);
+        }
+
         deliveryList.filter((data) => city.city === data.city).map(function (data) {
             data.weather = weather;
             data.riskLevel = assignRiskLevel(weather);

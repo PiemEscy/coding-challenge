@@ -79,8 +79,7 @@ function findOverlappingShifts(shiftList) {
 }
 
 function buildCoverageEvents(shiftList, department) {
-    const filteredShift = shiftList.filter(data => data.department === department)
-        ;
+    const filteredShift = shiftList.filter(data => data.department === department);
 
     const sortedResult = [];
     for (const shift of filteredShift) {

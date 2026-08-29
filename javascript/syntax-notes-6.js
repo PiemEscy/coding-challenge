@@ -79,13 +79,36 @@ function findOverlappingShifts(shiftList) {
 }
 
 function buildCoverageEvents(shiftList, department) {
-    
+    const filteredShift = shiftList.filter(data => data.department === department)
+        ;
+
+    const sortedResult = [];
+    for (const shift of filteredShift) {
+        sortedResult.push({time: shift.start, sched: "start"});
+        sortedResult.push({time: shift.end, sched: "end"});
+    }
+
+    sortedResult.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+    const result = [];
+    let shiftCount = 0;
+    for (const sorted of sortedResult) {
+        if(sorted.sched === "start"){
+            shiftCount++;
+        }else{
+            shiftCount--;
+        }
+        result.push({time: sorted.time, coverage: shiftCount});
+    }
+
+    return result;
 }
 
 function result(){
     const timeToMinutes = parseTimeToMinutes("09:30");
     const overlappingShifts = findOverlappingShifts(shifts());
-    console.log(overlappingShifts);
+    const coverEvent = buildCoverageEvents(shifts(), "Sales");
+    console.log(coverEvent);
     
 }
 
